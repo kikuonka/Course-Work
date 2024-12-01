@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteBase /
+
+AddType text/css .css
+AddType text/javascript .js
+RewriteCond %{REQUEST_URI} !^/project/webroot/
+RewriteCond %{REQUEST_URI} !(\.css|\.js|\.png|\.jpg|\.gif|robots\.txt)$ [NC]
+RewriteRule .+ index.php
