@@ -1,0 +1,81 @@
+@startuml
+
+namespace Core {
+    class Model {
+        +getSave(data: mixed): mixed
+        +findOne(query: string): array
+        +findMany(query: string): array
+        +addOne(query: string): bool
+        +deleteOne(query: string): bool
+        +updateOne(query: string): bool
+        +getId(): int
+    }
+    
+    class Controller {
+        +render(view: string, data: array): string
+        +title: string
+    }
+}
+
+namespace Project.Models {
+    class User extends Core.Model {
+        +getUser(login: string, password: string): array
+        +addUser(login: string, email: string, password: string, status: string): bool
+        +getUserId(): int
+    }
+    
+    class Student extends Core.Model {
+        +getAllStudent(): array
+        +getStudentById(id: int): array
+        +addStudent(name: string, email: string): bool
+        +deleteStudent(id: int): bool
+        +updateStudent(id: int, name: string, email: string): bool
+    }
+    
+    class Attendance extends Core.Model {
+        +getAttendance(): array
+        +updateStatus(studentId: int, status: string): bool
+        +logNotification(studentId: int, attendanceId: int, message: string): bool
+    }
+}
+
+namespace Project.Controllers {
+    class StudentController extends Core.Controller {
+        +index(): string
+        +add(): void
+        +update(params: array): void
+        +delete(params: array): void
+    }
+
+    class HomeController extends Core.Controller {
+        +index(): string
+    }
+
+    class AuthController extends Core.Controller {
+        +login(): string
+        +logout(): void
+        +register(): string
+    }
+
+    class AttendanceController extends Core.Controller {
+        +index(): string
+        +mark(): void
+        -sendNotificcation(student: array, status: string, attendanceId: int): void
+    }
+}
+
+Core.Model <|-- Project.Models.User
+Core.Model <|-- Project.Models.Student
+Core.Model <|-- Project.Models.Attendance
+
+Core.Controller <|-- Project.Controllers.StudentController
+Core.Controller <|-- Project.Controllers.HomeController
+Core.Controller <|-- Project.Controllers.AuthController
+Core.Controller <|-- Project.Controllers.AttendanceController
+
+Project.Models.User <-- Project.Controllers.AuthController : uses
+Project.Models.Student <-- Project.Controllers.StudentController : uses
+Project.Models.Attendance <-- Project.Controllers.AttendanceController : uses
+Project.Models.Student <-- Project.Controllers.AttendanceController : uses
+
+@enduml
